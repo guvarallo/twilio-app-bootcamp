@@ -26,6 +26,12 @@ app.post('/excuses', async (req, res) => {
   const reqBody = req.body.Body.trim()
 
   try {
+    if (reqBody !== 'EXCUSE ME' && !options.includes(reqBody)) {
+      twiml.message(
+        'Are you trying to get help for an excuse? If so, type EXCUSE ME'
+      )
+    }
+
     if (reqBody === 'EXCUSE ME') {
       twiml.message(
         `Welcome to Excuser, we're here to help. Please write a number for a fast excuse: 
@@ -36,6 +42,7 @@ app.post('/excuses', async (req, res) => {
         5 for party excuses`
       )
     }
+
     if (reqBody === '1') {
       const messages = await handleAxios(familyURL)
       twiml.message(messages)
@@ -51,10 +58,6 @@ app.post('/excuses', async (req, res) => {
     } else if (reqBody === '5') {
       const messages = await handleAxios(partyURL)
       twiml.message(messages)
-    } else if (reqBody !== 'EXCUSE ME' && !options.includes(reqBody)) {
-      twiml.message(
-        'Are you trying to get help for an excuse? If so, type EXCUSE ME'
-      )
     }
   } catch (error) {
     console.log(error)
